@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Central Hill School • Grade 9 Pre-Technical Studies</title>
+    <title>Hill School Primary Eldoret • Grade 9 Pre-Technical Studies</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -18,9 +18,9 @@
     <header class="bg-[#1e40af] text-white shadow-lg">
         <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-[#1e40af] text-2xl font-bold">CHS</div>
+                <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-[#1e40af] text-2xl font-bold">HSP</div>
                 <div>
-                    <h1 class="text-2xl font-bold tracking-tight">Central Hill School</h1>
+                    <h1 class="text-2xl font-bold tracking-tight">Hill School Primary Eldoret</h1>
                     <p class="text-xs text-blue-200 -mt-1">Grade 9 • Pre-Technical Studies</p>
                 </div>
             </div>
@@ -99,11 +99,11 @@
         <div id="teacher-view" class="hidden">
             <div class="flex justify-between items-end mb-8">
                 <div>
-                    <h2 class="text-4xl font-bold text-slate-800">Assessment Dashboard</h2>
-                    <p class="text-slate-600">Grade 9 Pre-Technical Studies • All Scratch Projects</p>
+                    <h2 class="text-4xl font-bold text-slate-800">Assessment Dashboard - Teacher Allan</h2>
+                    <p class="text-slate-600">Grade 9 Pre-Technical Studies • Hill School Primary Eldoret</p>
                 </div>
                 <div class="text-sm bg-emerald-100 text-emerald-700 px-4 py-2 rounded-3xl flex items-center gap-2">
-                    <i class="fa-solid fa-users"></i> <span id="total-submissions">0 submissions</span>
+                    <i class="fa-solid fa-users"></i> <span id="total-submissions">0 submissions received</span>
                 </div>
             </div>
             <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
@@ -116,6 +116,7 @@
                             <th class="px-8 py-5 text-left font-medium text-slate-500">Date</th>
                             <th class="px-8 py-5 text-center font-medium text-slate-500">Score (/40)</th>
                             <th class="px-8 py-5 text-center font-medium text-slate-500">Status</th>
+                            <th class="px-8 py-5 w-12"></th>
                         </tr>
                     </thead>
                     <tbody id="submissions-table" class="divide-y"></tbody>
@@ -143,24 +144,24 @@
         <div class="bg-white rounded-3xl max-w-md w-full mx-4 p-8 text-center">
             <div class="w-20 h-20 mx-auto bg-emerald-100 rounded-3xl flex items-center justify-center text-4xl mb-6">🎉</div>
             <h3 class="text-3xl font-bold text-slate-800">Project Submitted!</h3>
-            <p class="text-slate-600 mt-3">Your project has been sent to Mr. Tr Allan.</p>
+            <p class="text-slate-600 mt-3">Your project has been sent to Teacher Allan.</p>
             <button onclick="hideSuccessModal()" class="mt-8 bg-[#1e40af] text-white px-10 py-4 rounded-3xl font-semibold w-full">Back to Dashboard</button>
         </div>
     </div>
 
     <footer class="bg-white border-t py-6 text-center text-xs text-slate-400">
-        Central Hill School • Nairobi • Pre-Technical Studies Portal 2026
+        Hill School Primary Eldoret • Pre-Technical Studies Assessment Portal 2026
     </footer>
 
     <script>
-        const TEACHER_PASSWORD = "chs2026pretech"; // ← Change this to your secret password
-        const ADMIN_NAME = "Mr. Tr Allan";
+        const TEACHER_PASSWORD = "chs2026pretech";
+        const ADMIN_NAME = "Teacher Allan";
 
-        let submissions = JSON.parse(localStorage.getItem('chs_scratch_submissions')) || [];
+        let submissions = JSON.parse(localStorage.getItem('hsp_scratch_submissions')) || [];
         let currentRole = 'student';
 
         function saveSubmissions() {
-            localStorage.setItem('chs_scratch_submissions', JSON.stringify(submissions));
+            localStorage.setItem('hsp_scratch_submissions', JSON.stringify(submissions));
         }
 
         function renderMySubmissions() {
@@ -193,6 +194,11 @@
                     <td class="px-8 py-6 text-center">
                         <span class="px-4 py-1 rounded-3xl text-xs \( {sub.status === 'Graded' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}"> \){sub.status || 'Pending'}</span>
                     </td>
+                    <td class="px-8 py-6 text-center">
+                        <button onclick="deleteSubmission(${index}); event.stopImmediatePropagation()" class="text-red-500 hover:text-red-700">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
                 </tr>
             `).join('');
             document.getElementById('total-submissions').textContent = `${submissions.length} submissions received`;
@@ -203,6 +209,14 @@
             if (submissions[index].score !== null) submissions[index].status = "Graded";
             saveSubmissions();
             renderTeacherTable();
+        }
+
+        function deleteSubmission(index) {
+            if (confirm("Delete this submission permanently?")) {
+                submissions.splice(index, 1);
+                saveSubmissions();
+                renderTeacherTable();
+            }
         }
 
         function submitProject(e) {
